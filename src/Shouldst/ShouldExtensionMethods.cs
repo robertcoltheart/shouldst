@@ -9,20 +9,40 @@ namespace Shouldst;
 
 public static class ShouldExtensionMethods
 {
-    public static void ShouldBeFalse(this bool? condition)
+    public static void ShouldBeFalse(this bool condition)
     {
-        if (condition is null or true)
+        if (condition)
         {
             throw new ShouldException("Should be [false] but is [true]");
         }
     }
 
-    public static void ShouldBeTrue(this bool? condition)
+    public static void ShouldBeFalse(this bool? condition)
     {
-        if (condition is null or false)
+        if (condition is not { } boolCondition)
+        {
+            throw new ShouldException("Should be [false] but is [null]");
+        }
+
+        boolCondition.ShouldBeFalse();
+    }
+
+    public static void ShouldBeTrue(this bool condition)
+    {
+        if (!condition)
         {
             throw new ShouldException("Should be [true] but is [false]");
         }
+    }
+
+    public static void ShouldBeTrue(this bool? condition)
+    {
+        if (condition is not { } boolCondition)
+        {
+            throw new ShouldException("Should be [true] but is [null]");
+        }
+
+        boolCondition.ShouldBeTrue();
     }
 
     public static T ShouldEqual<T>(this T actual, T expected)
