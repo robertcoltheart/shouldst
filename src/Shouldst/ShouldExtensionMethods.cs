@@ -93,17 +93,17 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldBeOfExactType<T>(this object actual)
+    public static void ShouldBeOfExactType<T>(this object? actual)
     {
         actual.ShouldBeOfExactType(typeof(T));
     }
 
-    public static void ShouldNotBeOfExactType<T>(this object actual)
+    public static void ShouldNotBeOfExactType<T>(this object? actual)
     {
         actual.ShouldNotBeOfExactType(typeof(T));
     }
 
-    public static void ShouldBeOfExactType(this object actual, Type expected)
+    public static void ShouldBeOfExactType(this object? actual, Type expected)
     {
         if (actual == null)
         {
@@ -116,7 +116,7 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldNotBeOfExactType(this object actual, Type expected)
+    public static void ShouldNotBeOfExactType(this object? actual, Type expected)
     {
         if (actual == null)
         {
