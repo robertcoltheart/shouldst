@@ -45,24 +45,20 @@ public static class ShouldExtensionMethods
         boolCondition.ShouldBeTrue();
     }
 
-    public static T ShouldEqual<T>(this T actual, T expected)
+    public static void ShouldEqual<T>(this T actual, T expected)
     {
         if (!actual.SafeEquals(expected))
         {
             throw new ShouldException(MessageExtensions.FormatErrorMessage(actual, expected));
         }
-
-        return actual;
     }
 
-    public static T ShouldNotEqual<T>(this T actual, T expected)
+    public static void ShouldNotEqual<T>(this T actual, T expected)
     {
         if (actual.SafeEquals(expected))
         {
             throw new ShouldException($"Should not equal {expected.ToUsefulString()} but does: {actual.ToUsefulString()}");
         }
-
-        return actual;
     }
 
     public static void ShouldBeNull(this object? actual)
@@ -73,51 +69,41 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static object ShouldNotBeNull(this object? actual)
+    public static void ShouldNotBeNull(this object? actual)
     {
         if (actual == null)
         {
             throw new ShouldException("Should be [not null] but is [null]");
         }
-
-        return actual;
     }
 
-    public static object ShouldBeTheSameAs(this object actual, object expected)
+    public static void ShouldBeTheSameAs(this object actual, object expected)
     {
         if (!ReferenceEquals(actual, expected))
         {
             throw new ShouldException($"Should be the same as {expected} but is {actual}");
         }
-
-        return actual;
     }
 
-    public static object ShouldNotBeTheSameAs(this object actual, object expected)
+    public static void ShouldNotBeTheSameAs(this object actual, object expected)
     {
         if (ReferenceEquals(actual, expected))
         {
             throw new ShouldException($"Should not be the same as {expected} but is {actual}");
         }
-
-        return actual;
     }
 
-    public static T ShouldBeOfExactType<T>(this object actual)
+    public static void ShouldBeOfExactType<T>(this object actual)
     {
         actual.ShouldBeOfExactType(typeof(T));
-
-        return (T)actual;
     }
 
-    public static object ShouldNotBeOfExactType<T>(this object actual)
+    public static void ShouldNotBeOfExactType<T>(this object actual)
     {
         actual.ShouldNotBeOfExactType(typeof(T));
-
-        return actual;
     }
 
-    public static object ShouldBeOfExactType(this object actual, Type expected)
+    public static void ShouldBeOfExactType(this object actual, Type expected)
     {
         if (actual == null)
         {
@@ -128,11 +114,9 @@ public static class ShouldExtensionMethods
         {
             throw new ShouldException($"Should be of type {expected} but is of type {actual.GetType()}");
         }
-
-        return actual;
     }
 
-    public static object ShouldNotBeOfExactType(this object actual, Type expected)
+    public static void ShouldNotBeOfExactType(this object actual, Type expected)
     {
         if (actual == null)
         {
@@ -143,25 +127,19 @@ public static class ShouldExtensionMethods
         {
             throw new ShouldException($"Should not be of type {expected} but is of type {actual.GetType()}");
         }
-
-        return actual;
     }
 
-    public static object ShouldBeAssignableTo<T>(this object actual)
+    public static void ShouldBeAssignableTo<T>(this object actual)
     {
         actual.ShouldBeAssignableTo(typeof(T));
-
-        return actual;
     }
 
-    public static object ShouldNotBeAssignableTo<T>(this object actual)
+    public static void ShouldNotBeAssignableTo<T>(this object actual)
     {
         actual.ShouldNotBeAssignableTo(typeof(T));
-
-        return actual;
     }
 
-    public static object ShouldBeAssignableTo(this object actual, Type expected)
+    public static void ShouldBeAssignableTo(this object actual, Type expected)
     {
         if (actual == null)
         {
@@ -172,11 +150,9 @@ public static class ShouldExtensionMethods
         {
             throw new ShouldException($"Should be assignable to type {expected} but is not. Actual type is {actual.GetType()}");
         }
-
-        return actual;
     }
 
-    public static object ShouldNotBeAssignableTo(this object actual, Type expected)
+    public static void ShouldNotBeAssignableTo(this object actual, Type expected)
     {
         if (actual == null)
         {
@@ -187,20 +163,16 @@ public static class ShouldExtensionMethods
         {
             throw new ShouldException($"Should not be assignable to type {expected} but is. Actual type is {actual.GetType()}");
         }
-
-        return actual;
     }
 
-    public static T ShouldMatch<T>(this T actual, Expression<Func<T, bool>> condition)
+    public static void ShouldMatch<T>(this T actual, Expression<Func<T, bool>> condition)
     {
         var matches = condition.Compile().Invoke(actual);
 
-        if (matches)
+        if (!matches)
         {
-            return actual;
+            throw new ShouldException($"Should match expression [{condition}], but does not.");
         }
-
-        throw new ShouldException($"Should match expression [{condition}], but does not.");
     }
 
     public static void ShouldEachConformTo<T>(this IEnumerable<T> list, Expression<Func<T, bool>> condition)
@@ -326,7 +298,7 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static IComparable ShouldBeGreaterThan(this IComparable arg1, IComparable arg2)
+    public static void ShouldBeGreaterThan(this IComparable arg1, IComparable arg2)
     {
         if (arg2 == null)
         {
@@ -342,11 +314,9 @@ public static class ShouldExtensionMethods
         {
             throw NewException("Should be greater than {0} but is {1}", arg2, arg1);
         }
-
-        return arg1;
     }
 
-    public static IComparable ShouldBeGreaterThanOrEqualTo(this IComparable arg1, IComparable arg2)
+    public static void ShouldBeGreaterThanOrEqualTo(this IComparable arg1, IComparable arg2)
     {
         if (arg2 == null)
         {
@@ -362,11 +332,9 @@ public static class ShouldExtensionMethods
         {
             throw NewException("Should be greater than or equal to {0} but is {1}", arg2, arg1);
         }
-
-        return arg1;
     }
 
-    public static IComparable ShouldBeLessThan(this IComparable arg1, IComparable arg2)
+    public static void ShouldBeLessThan(this IComparable arg1, IComparable arg2)
     {
         if (arg2 == null)
         {
@@ -382,11 +350,9 @@ public static class ShouldExtensionMethods
         {
             throw NewException("Should be less than {0} but is {1}", arg2, arg1);
         }
-
-        return arg1;
     }
 
-    public static IComparable ShouldBeLessThanOrEqualTo(this IComparable arg1, IComparable arg2)
+    public static void ShouldBeLessThanOrEqualTo(this IComparable arg1, IComparable arg2)
     {
         if (arg2 == null)
         {
@@ -402,8 +368,6 @@ public static class ShouldExtensionMethods
         {
             throw NewException("Should be less than or equal to {0} but is {1}", arg2, arg1);
         }
-
-        return arg1;
     }
 
     public static void ShouldBeCloseTo(this float actual, float expected)
@@ -571,7 +535,7 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static string ShouldBeEqualIgnoringCase(this string actual, string expected)
+    public static void ShouldBeEqualIgnoringCase(this string actual, string expected)
     {
         if (expected == null)
         {
@@ -587,8 +551,6 @@ public static class ShouldExtensionMethods
         {
             throw NewException("Should be equal ignoring case to {0} but is {1}", expected, actual);
         }
-
-        return actual;
     }
 
     public static void ShouldStartWith(this string actual, string expected)
@@ -690,14 +652,12 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static Exception ShouldBeThrownBy(this Type exceptionType, Action method)
+    public static void ShouldBeThrownBy(this Type exceptionType, Action method)
     {
         var exception = CatchException(method);
 
         ShouldNotBeNull(exception);
         ShouldBeAssignableTo(exception, exceptionType);
-
-        return exception;
     }
 
     public static void ShouldBeLike(this object obj, object expected)
