@@ -77,7 +77,7 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldBeTheSameAs(this object actual, object expected)
+    public static void ShouldBeTheSameAs(this object? actual, object? expected)
     {
         if (!ReferenceEquals(actual, expected))
         {
@@ -85,7 +85,7 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldNotBeTheSameAs(this object actual, object expected)
+    public static void ShouldNotBeTheSameAs(this object? actual, object? expected)
     {
         if (ReferenceEquals(actual, expected))
         {
