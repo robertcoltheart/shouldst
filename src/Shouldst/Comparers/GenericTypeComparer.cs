@@ -1,26 +1,28 @@
-﻿using System.Reflection;
+﻿namespace Shouldst.Comparers;
 
-namespace Shouldst.Comparers;
-
-internal class GenericTypeComparer<T> : ICompareStrategy<T>
+internal class GenericTypeComparer<T> : INullableComparer<T>
 {
-    public ComparisionResult Compare(T x, T y)
+    public int? Compare(T x, T y)
     {
         var type = typeof(T);
 
-        if (!type.GetTypeInfo().IsValueType || (type.GetTypeInfo().IsGenericType && type.IsNullable()))
+        if (type.IsValueType && (!type.IsGenericType || !type.IsNullable()))
         {
-            if (x.IsEqualToDefault())
-            {
-                return new ComparisionResult(y.IsEqualToDefault() ? 0 : -1);
-            }
-
-            if (y.IsEqualToDefault())
-            {
-                return new ComparisionResult(-1);
-            }
+            return null;
         }
 
-        return new NoResult();
+        if (Equals(x, default(T)))
+        {
+            return Equals(y, default(T))
+                ? 0
+                : -1;
+        }
+
+        if (Equals(y, default(T)))
+        {
+            return -1;
+        }
+
+        return null;
     }
 }
