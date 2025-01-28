@@ -47,7 +47,7 @@ public static class ShouldExtensionMethods
 
     public static void ShouldEqual<T>(this T actual, T expected)
     {
-        if (!actual.SafeEquals(expected))
+        if (AssertComparer<T>.Default.Compare(actual, expected) != 0)
         {
             throw new ShouldException(MessageExtensions.FormatErrorMessage(actual, expected));
         }
@@ -55,7 +55,7 @@ public static class ShouldExtensionMethods
 
     public static void ShouldNotEqual<T>(this T actual, T expected)
     {
-        if (actual.SafeEquals(expected))
+        if (AssertComparer<T>.Default.Compare(actual, expected) == 0)
         {
             throw new ShouldException($"Should not equal {expected.ToUsefulString()} but does: {actual.ToUsefulString()}");
         }
@@ -772,13 +772,6 @@ public static class ShouldExtensionMethods
         }
 
         throw new InvalidOperationException("Unknown node type");
-    }
-
-    private static bool SafeEquals<T>(this T left, T right)
-    {
-        var comparer = new AssertComparer<T>();
-
-        return comparer.Compare(left, right) == 0;
     }
 
     private static ShouldException NewException(string message, params object[] parameters)

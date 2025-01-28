@@ -2,32 +2,37 @@
 
 namespace Shouldst.Comparers;
 
-internal class EnumerableComparer<T> : ICompareStrategy<T>
+internal class EnumerableComparer<T> : INullableComparer<T>
 {
-    public ComparisionResult Compare(T x, T y)
+    public int? Compare(T x, T y)
     {
-        if (x is IEnumerable enumerableX && y is IEnumerable enumerableY)
+        if (x is not IEnumerable enumerableX || y is not IEnumerable enumerableY)
         {
-            var enumeratorX = enumerableX.GetEnumerator();
-            var enumeratorY = enumerableY.GetEnumerator();
-
-            while (true)
-            {
-                var hasNextX = enumeratorX.MoveNext();
-                var hasNextY = enumeratorY.MoveNext();
-
-                if (!hasNextX || !hasNextY)
-                {
-                    return new ComparisionResult(hasNextX == hasNextY ? 0 : -1);
-                }
-
-                if (!Equals(enumeratorX.Current, enumeratorY.Current))
-                {
-                    return new ComparisionResult(-1);
-                }
-            }
+            return null;
         }
 
-        return new NoResult();
+        var enumeratorX = enumerableX.GetEnumerator();
+        var enumeratorY = enumerableY.GetEnumerator();
+            
+        using var disposableX = enumeratorX as IDisposable;
+        using var disposableY = enumeratorY as IDisposable;
+
+        while (true)
+        {
+            var hasNextX = enumeratorX.MoveNext();
+            var hasNextY = enumeratorY.MoveNext();
+
+            if (!hasNextX || !hasNextY)
+            {
+                return hasNextX == hasNextY
+                    ? 0
+                    : -1;
+            }
+
+            if (!Equals(enumeratorX.Current, enumeratorY.Current))
+            {
+                return -1;
+            }
+        }
     }
 }

@@ -1,14 +1,16 @@
 ﻿namespace Shouldst.Comparers;
 
-internal class EquatableComparer<T> : ICompareStrategy<T>
+internal class EquatableComparer<T> : INullableComparer<T>
 {
-    public ComparisionResult Compare(T x, T y)
+    public int? Compare(T x, T y)
     {
         if (x is not IEquatable<T> equatable)
         {
-            return new NoResult();
+            return null;
         }
 
-        return new ComparisionResult(equatable.Equals(y) ? 0 : -1);
+        return equatable.Equals(y)
+            ? 0
+            : -1;
     }
 }

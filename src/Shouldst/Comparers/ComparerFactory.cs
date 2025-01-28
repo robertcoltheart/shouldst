@@ -2,7 +2,7 @@
 
 internal static class ComparerFactory
 {
-    public static IEnumerable<ICompareStrategy<T>> GetComparers<T>()
+    public static IReadOnlyCollection<INullableComparer<T>> GetComparers<T>()
     {
         return
         [

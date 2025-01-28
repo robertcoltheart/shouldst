@@ -1,14 +1,24 @@
 ﻿namespace Shouldst.Comparers;
 
-internal class TypeComparer<T> : ICompareStrategy<T>
+internal class TypeComparer<T> : INullableComparer<T>
 {
-    public ComparisionResult Compare(T x, T y)
+    public int? Compare(T x, T y)
     {
-        if (x.GetType() != y.GetType())
+        if (x == null && y == null)
         {
-            return new ComparisionResult(-1);
+            return 0;
         }
 
-        return new NoResult();
+        if (x == null || y == null)
+        {
+            return -1;
+        }
+
+        if (x.GetType() != y.GetType())
+        {
+            return -1;
+        }
+
+        return null;
     }
 }
