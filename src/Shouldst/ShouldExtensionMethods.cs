@@ -129,17 +129,17 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldBeAssignableTo<T>(this object actual)
+    public static void ShouldBeAssignableTo<T>(this object? actual)
     {
         actual.ShouldBeAssignableTo(typeof(T));
     }
 
-    public static void ShouldNotBeAssignableTo<T>(this object actual)
+    public static void ShouldNotBeAssignableTo<T>(this object? actual)
     {
         actual.ShouldNotBeAssignableTo(typeof(T));
     }
 
-    public static void ShouldBeAssignableTo(this object actual, Type expected)
+    public static void ShouldBeAssignableTo(this object? actual, Type expected)
     {
         if (actual == null)
         {
@@ -152,7 +152,7 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldNotBeAssignableTo(this object actual, Type expected)
+    public static void ShouldNotBeAssignableTo(this object? actual, Type expected)
     {
         if (actual == null)
         {
@@ -175,9 +175,9 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldEachConformTo<T>(this IEnumerable<T> list, Expression<Func<T, bool>> condition)
+    public static void ShouldEachConformTo<T>(this IEnumerable<T> actual, Expression<Func<T, bool>> condition)
     {
-        var source = new List<T>(list);
+        var source = new List<T>(actual);
         var func = condition.Compile();
 
         var failingItems = source
@@ -192,25 +192,25 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldContain<T>(this IEnumerable<T> list, params T[] items)
+    public static void ShouldContain<T>(this IEnumerable<T> actual, params T[] expected)
     {
-        list.ShouldContain((IEnumerable<T>)items);
+        actual.ShouldContain((IEnumerable<T>)expected);
     }
 
-    public static void ShouldContain(this IEnumerable list, params object[] items)
+    public static void ShouldContain(this IEnumerable actual, params object[] expected)
     {
-        var actualList = list.Cast<object>();
-        var expectedList = items.Cast<object>();
+        var actualList = actual.Cast<object>();
+        var expectedList = expected.Cast<object>();
 
         actualList.ShouldContain(expectedList);
     }
 
-    public static void ShouldContain<T>(this IEnumerable<T> list, IEnumerable<T> items)
+    public static void ShouldContain<T>(this IEnumerable<T> actual, params IEnumerable<T> expected)
     {
         var comparer = new AssertComparer<T>();
 
-        var listArray = list.ToArray();
-        var itemsArray = items.ToArray();
+        var listArray = actual.ToArray();
+        var itemsArray = expected.ToArray();
 
         var noContain = itemsArray
             .Where(x => !listArray.Contains(x, comparer))
@@ -228,10 +228,10 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldContain<T>(this IEnumerable<T> list, Expression<Func<T, bool>> condition)
+    public static void ShouldContain<T>(this IEnumerable<T> actual, Expression<Func<T, bool>> condition)
     {
         var func = condition.Compile();
-        var listArray = list.ToArray();
+        var listArray = actual.ToArray();
 
         if (!listArray.Any(func))
         {
@@ -243,25 +243,25 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldNotContain(this IEnumerable list, params object[] items)
+    public static void ShouldNotContain(this IEnumerable actual, params object[] expected)
     {
-        var actualList = list.Cast<object>();
-        var expectedList = items.Cast<object>();
+        var actualList = actual.Cast<object>();
+        var expectedList = expected.Cast<object>();
 
         actualList.ShouldNotContain(expectedList);
     }
 
-    public static void ShouldNotContain<T>(this IEnumerable<T> list, params T[] items)
+    public static void ShouldNotContain<T>(this IEnumerable<T> actual, params T[] expected)
     {
-        list.ShouldNotContain((IEnumerable<T>)items);
+        actual.ShouldNotContain((IEnumerable<T>)expected);
     }
 
-    public static void ShouldNotContain<T>(this IEnumerable<T> list, IEnumerable<T> items)
+    public static void ShouldNotContain<T>(this IEnumerable<T> actual, params IEnumerable<T> expected)
     {
         var comparer = new AssertComparer<T>();
 
-        var listArray = list.ToArray();
-        var itemsArray = items.ToArray();
+        var listArray = actual.ToArray();
+        var itemsArray = expected.ToArray();
 
         var contains = itemsArray
             .Where(x => listArray.Contains(x, comparer))
@@ -279,11 +279,11 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldNotContain<T>(this IEnumerable<T> list, Expression<Func<T, bool>> condition)
+    public static void ShouldNotContain<T>(this IEnumerable<T> actual, Expression<Func<T, bool>> condition)
     {
         var func = condition.Compile();
 
-        var listArray = list.ToArray();
+        var listArray = actual.ToArray();
         var contains = listArray.Where(func).ToArray();
 
         if (contains.Any())
@@ -298,75 +298,75 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldBeGreaterThan(this IComparable arg1, IComparable arg2)
+    public static void ShouldBeGreaterThan(this IComparable actual, IComparable expected)
     {
-        if (arg2 == null)
+        if (expected == null)
         {
-            throw new ArgumentNullException(nameof(arg2));
+            throw new ArgumentNullException(nameof(expected));
         }
 
-        if (arg1 == null)
+        if (actual == null)
         {
-            throw NewException("Should be greater than {0} but is [null]", arg2);
+            throw NewException("Should be greater than {0} but is [null]", expected);
         }
 
-        if (arg1.CompareTo(arg2.TryToChangeType(arg1.GetType())) <= 0)
+        if (actual.CompareTo(expected.TryToChangeType(actual.GetType())) <= 0)
         {
-            throw NewException("Should be greater than {0} but is {1}", arg2, arg1);
+            throw NewException("Should be greater than {0} but is {1}", expected, actual);
         }
     }
 
-    public static void ShouldBeGreaterThanOrEqualTo(this IComparable arg1, IComparable arg2)
+    public static void ShouldBeGreaterThanOrEqualTo(this IComparable actual, IComparable expected)
     {
-        if (arg2 == null)
+        if (expected == null)
         {
-            throw new ArgumentNullException(nameof(arg2));
+            throw new ArgumentNullException(nameof(expected));
         }
 
-        if (arg1 == null)
+        if (actual == null)
         {
-            throw NewException("Should be greater than or equal to {0} but is [null]", arg2);
+            throw NewException("Should be greater than or equal to {0} but is [null]", expected);
         }
 
-        if (arg1.CompareTo(arg2.TryToChangeType(arg1.GetType())) < 0)
+        if (actual.CompareTo(expected.TryToChangeType(actual.GetType())) < 0)
         {
-            throw NewException("Should be greater than or equal to {0} but is {1}", arg2, arg1);
+            throw NewException("Should be greater than or equal to {0} but is {1}", expected, actual);
         }
     }
 
-    public static void ShouldBeLessThan(this IComparable arg1, IComparable arg2)
+    public static void ShouldBeLessThan(this IComparable actual, IComparable expected)
     {
-        if (arg2 == null)
+        if (expected == null)
         {
-            throw new ArgumentNullException(nameof(arg2));
+            throw new ArgumentNullException(nameof(expected));
         }
 
-        if (arg1 == null)
+        if (actual == null)
         {
-            throw NewException("Should be less than {0} but is [null]", arg2);
+            throw NewException("Should be less than {0} but is [null]", expected);
         }
 
-        if (arg1.CompareTo(arg2.TryToChangeType(arg1.GetType())) >= 0)
+        if (actual.CompareTo(expected.TryToChangeType(actual.GetType())) >= 0)
         {
-            throw NewException("Should be less than {0} but is {1}", arg2, arg1);
+            throw NewException("Should be less than {0} but is {1}", expected, actual);
         }
     }
 
-    public static void ShouldBeLessThanOrEqualTo(this IComparable arg1, IComparable arg2)
+    public static void ShouldBeLessThanOrEqualTo(this IComparable actual, IComparable expected)
     {
-        if (arg2 == null)
+        if (expected == null)
         {
-            throw new ArgumentNullException(nameof(arg2));
+            throw new ArgumentNullException(nameof(expected));
         }
 
-        if (arg1 == null)
+        if (actual == null)
         {
-            throw NewException("Should be less than or equal to {0} but is [null]", arg2);
+            throw NewException("Should be less than or equal to {0} but is [null]", expected);
         }
 
-        if (arg1.CompareTo(arg2.TryToChangeType(arg1.GetType())) > 0)
+        if (actual.CompareTo(expected.TryToChangeType(actual.GetType())) > 0)
         {
-            throw NewException("Should be less than or equal to {0} but is {1}", arg2, arg1);
+            throw NewException("Should be less than or equal to {0} but is {1}", expected, actual);
         }
     }
 
@@ -427,9 +427,9 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldBeEmpty(this IEnumerable collection)
+    public static void ShouldBeEmpty(this IEnumerable actual)
     {
-        var items = collection.Cast<object>().ToArray();
+        var items = actual.Cast<object>().ToArray();
 
         if (items.Any())
         {
@@ -437,36 +437,36 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldBeEmpty(this string aString)
+    public static void ShouldBeEmpty(this string? actual)
     {
-        if (aString == null)
+        if (actual == null)
         {
             throw new ShouldException("Should be empty but is [null]");
         }
 
-        if (!string.IsNullOrEmpty(aString))
+        if (!string.IsNullOrEmpty(actual))
         {
-            throw NewException("Should be empty but is {0}", aString);
+            throw NewException("Should be empty but is {0}", actual);
         }
     }
 
-    public static void ShouldNotBeEmpty(this IEnumerable collection)
+    public static void ShouldNotBeEmpty(this IEnumerable actual)
     {
-        if (!collection.Cast<object>().Any())
+        if (!actual.Cast<object>().Any())
         {
             throw NewException("Should not be empty but is");
         }
     }
 
-    public static void ShouldNotBeEmpty(this string aString)
+    public static void ShouldNotBeEmpty(this string? actual)
     {
-        if (string.IsNullOrEmpty(aString))
+        if (string.IsNullOrEmpty(actual))
         {
             throw NewException("Should not be empty but is");
         }
     }
 
-    public static void ShouldMatch(this string actual, string pattern)
+    public static void ShouldMatch(this string? actual, string pattern)
     {
         if (pattern == null)
         {
@@ -481,7 +481,7 @@ public static class ShouldExtensionMethods
         ShouldMatch(actual, new Regex(pattern));
     }
 
-    public static void ShouldMatch(this string actual, Regex pattern)
+    public static void ShouldMatch(this string? actual, Regex pattern)
     {
         if (pattern == null)
         {
@@ -499,7 +499,7 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldContain(this string actual, string expected)
+    public static void ShouldContain(this string? actual, string expected)
     {
         if (expected == null)
         {
@@ -517,11 +517,11 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldNotContain(this string? actual, string notExpected)
+    public static void ShouldNotContain(this string? actual, string expected)
     {
-        if (notExpected == null)
+        if (expected == null)
         {
-            throw new ArgumentNullException(nameof(notExpected));
+            throw new ArgumentNullException(nameof(expected));
         }
 
         if (actual == null)
@@ -529,13 +529,13 @@ public static class ShouldExtensionMethods
             return;
         }
 
-        if (actual.Contains(notExpected))
+        if (actual.Contains(expected))
         {
-            throw NewException("Should not contain {0} but is {1}", notExpected, actual);
+            throw NewException("Should not contain {0} but is {1}", expected, actual);
         }
     }
 
-    public static void ShouldBeEqualIgnoringCase(this string actual, string expected)
+    public static void ShouldBeEqualIgnoringCase(this string? actual, string expected)
     {
         if (expected == null)
         {
@@ -553,7 +553,7 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldStartWith(this string actual, string expected)
+    public static void ShouldStartWith(this string? actual, string expected)
     {
         if (expected == null)
         {
@@ -571,7 +571,7 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldEndWith(this string actual, string expected)
+    public static void ShouldEndWith(this string? actual, string expected)
     {
         if (expected == null)
         {
@@ -589,16 +589,16 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldBeSurroundedWith(this string actual, string expectedStartDelimiter, string expectedEndDelimiter)
+    public static void ShouldBeSurroundedWith(this string? actual, string startDelimiter, string endDelimiter)
     {
-        actual.ShouldStartWith(expectedStartDelimiter);
-        actual.ShouldEndWith(expectedEndDelimiter);
+        actual.ShouldStartWith(startDelimiter);
+        actual.ShouldEndWith(endDelimiter);
     }
 
-    public static void ShouldBeSurroundedWith(this string actual, string expectedDelimiter)
+    public static void ShouldBeSurroundedWith(this string? actual, string delimiter)
     {
-        actual.ShouldStartWith(expectedDelimiter);
-        actual.ShouldEndWith(expectedDelimiter);
+        actual.ShouldStartWith(delimiter);
+        actual.ShouldEndWith(delimiter);
     }
 
     public static void ShouldContainErrorMessage(this Exception exception, string expected)
@@ -606,15 +606,15 @@ public static class ShouldExtensionMethods
         exception.Message.ShouldContain(expected);
     }
 
-    public static void ShouldContainOnly<T>(this IEnumerable<T> list, params T[] items)
+    public static void ShouldContainOnly<T>(this IEnumerable<T> actual, params T[] expected)
     {
-        list.ShouldContainOnly((IEnumerable<T>)items);
+        actual.ShouldContainOnly((IEnumerable<T>)expected);
     }
 
-    public static void ShouldContainOnly<T>(this IEnumerable<T> list, IEnumerable<T> items)
+    public static void ShouldContainOnly<T>(this IEnumerable<T> actual, IEnumerable<T> expected)
     {
-        var listArray = list.ToArray();
-        var itemsArray = items.ToArray();
+        var listArray = actual.ToArray();
+        var itemsArray = expected.ToArray();
 
         var source = new List<T>(listArray);
         var noContain = new List<T>();
@@ -652,17 +652,34 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldBeThrownBy(this Type exceptionType, Action method)
+    public static void ShouldBeThrownBy(this Type exceptionType, Action action)
     {
-        var exception = CatchException(method);
+        var exception = CatchException(action);
 
         ShouldNotBeNull(exception);
         ShouldBeAssignableTo(exception, exceptionType);
     }
 
-    public static void ShouldBeLike(this object obj, object expected)
+    public static void ShouldThrow<T>(this Action action)
+        where T : Exception
     {
-        var exceptions = ShouldBeLikeInternal(obj, expected, string.Empty, []).ToArray();
+        var exception = CatchException(action);
+
+        ShouldNotBeNull(exception);
+        ShouldBeAssignableTo<T>(exception);
+    }
+
+    public static void ShouldThrow(this Action action, Type exceptionType)
+    {
+        var exception = CatchException(action);
+
+        ShouldNotBeNull(exception);
+        ShouldBeAssignableTo(exception, exceptionType);
+    }
+
+    public static void ShouldBeLike(this object actual, object expected)
+    {
+        var exceptions = ShouldBeLikeInternal(actual, expected, string.Empty, []).ToArray();
 
         if (exceptions.Any())
         {
@@ -746,7 +763,7 @@ public static class ShouldExtensionMethods
             {
                 var errorMessage = $"  Expected: Class{Environment.NewLine}  But was:  {obj?.GetType()}";
 
-                return new[] { NewException($"{{0}}:{Environment.NewLine}{errorMessage}", nodeName) };
+                return [NewException($"{{0}}:{Environment.NewLine}{errorMessage}", nodeName)];
             }
 
             var expectedKeyValues = ((ObjectGraphComparer.KeyValueNode)expectedNode)?.KeyValues;
