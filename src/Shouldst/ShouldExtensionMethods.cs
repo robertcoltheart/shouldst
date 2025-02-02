@@ -205,84 +205,74 @@ public static class ShouldExtensionMethods
 
     public static void ShouldContain<T>(this IEnumerable<T> actual, params T[] expected)
     {
-        actual.ShouldContain((IEnumerable<T>)expected);
+        actual.ShouldContain(expected.AsEnumerable());
     }
 
     public static void ShouldContain(this IEnumerable actual, params object[] expected)
     {
-        var actualList = actual.Cast<object>();
-        var expectedList = expected.Cast<object>();
-
-        actualList.ShouldContain(expectedList);
+        actual.Cast<object>().ShouldContain(expected.AsEnumerable());
     }
 
     public static void ShouldContain<T>(this IEnumerable<T> actual, params IEnumerable<T> expected)
     {
-        var comparer = new AssertComparer<T>();
+        var actualItems = actual.ToArray();
+        var expectedItems = expected.ToArray();
 
-        var listArray = actual.ToArray();
-        var itemsArray = expected.ToArray();
+        var missing = expectedItems
+            .Where(x => !actualItems.Contains(x, AssertComparer<T>.Default))
+            .ToArray();
 
-        var noContain = itemsArray
-            .Where(x => !listArray.Contains(x, comparer))
-            .ToList();
-
-        if (noContain.Any())
+        if (missing.Any())
         {
             throw new ShouldException(
                 $"""
-                 Should contain: {itemsArray.EachToUsefulString()}
-                 entire list: {listArray.EachToUsefulString()}
-                 does not contain: {noContain.EachToUsefulString()}
+                 Should contain: {expectedItems.EachToUsefulString()}
+                 entire list: {actualItems.EachToUsefulString()}
+                 does not contain: {missing.EachToUsefulString()}
                  """);
         }
     }
 
     public static void ShouldContain<T>(this IEnumerable<T> actual, Expression<Func<T, bool>> condition)
     {
-        var func = condition.Compile();
-        var listArray = actual.ToArray();
+        var predicate = condition.Compile();
+        var actualItems = actual.ToArray();
 
-        if (!listArray.Any(func))
+        if (!actualItems.Any(predicate))
         {
             throw new ShouldException(
                 $"""
                  Should contain elements conforming to: {condition}
-                 entire list: {listArray.EachToUsefulString()}
+                 entire list: {actualItems.EachToUsefulString()}
                  """);
         }
     }
 
     public static void ShouldNotContain(this IEnumerable actual, params object[] expected)
     {
-        var actualList = actual.Cast<object>();
-        var expectedList = expected.Cast<object>();
-
-        actualList.ShouldNotContain(expectedList);
+        actual.Cast<object>().ShouldNotContain(expected.AsEnumerable());
     }
 
     public static void ShouldNotContain<T>(this IEnumerable<T> actual, params T[] expected)
     {
-        actual.ShouldNotContain((IEnumerable<T>)expected);
+        actual.ShouldNotContain(expected.AsEnumerable());
     }
 
     public static void ShouldNotContain<T>(this IEnumerable<T> actual, params IEnumerable<T> expected)
     {
-        var comparer = new AssertComparer<T>();
+        var actualItems = actual.ToArray();
+        var expectedItems = expected.ToArray();
 
-        var listArray = actual.ToArray();
-        var itemsArray = expected.ToArray();
-
-        var contains = itemsArray
-            .Where(x => listArray.Contains(x, comparer))
-            .ToList();
+        var contains = expectedItems
+            .Where(x => actualItems.Contains(x, AssertComparer<T>.Default))
+            .ToArray();
 
         if (contains.Any())
         {
             throw new ShouldException(
                 $"""
-                 Should not contain: {itemsArray.EachToUsefulString()}
-                 entire list: {listArray.EachToUsefulString()}
+                 Should not contain: {expectedItems.EachToUsefulString()}
+                 entire list: {actualItems.EachToUsefulString()}
                  does contain: {contains.EachToUsefulString()}
                  """);
         }
@@ -290,17 +280,17 @@ public static class ShouldExtensionMethods
 
     public static void ShouldNotContain<T>(this IEnumerable<T> actual, Expression<Func<T, bool>> condition)
     {
-        var func = condition.Compile();
+        var predicate = condition.Compile();
 
-        var listArray = actual.ToArray();
-        var contains = listArray.Where(func).ToArray();
+        var actualItems = actual.ToArray();
+        var contains = actualItems.Where(predicate).ToArray();
 
         if (contains.Any())
         {
             throw new ShouldException(
                 $"""
                  No elements should conform to: {condition}
-                 entire list: {listArray.EachToUsefulString()}
+                 entire list: {actualItems.EachToUsefulString()}
                  does contain: {contains.EachToUsefulString()}
                  """);
         }
