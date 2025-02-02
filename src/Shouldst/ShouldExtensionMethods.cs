@@ -296,7 +296,8 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldBeGreaterThan(this IComparable actual, IComparable expected)
+    public static void ShouldBeGreaterThan<T>(this T? actual, T? expected)
+        where T : IComparable<T>
     {
         if (expected == null)
         {
@@ -305,16 +306,17 @@ public static class ShouldExtensionMethods
 
         if (actual == null)
         {
-            throw NewException("Should be greater than {0} but is [null]", expected);
+            throw new ShouldException($"Should be greater than {expected.ToUsefulString()} but is [null]");
         }
 
-        if (actual.CompareTo(expected.TryToChangeType(actual.GetType())) <= 0)
+        if (actual.CompareTo(expected) <= 0)
         {
-            throw NewException("Should be greater than {0} but is {1}", expected, actual);
+            throw new ShouldException($"Should be greater than {expected.ToUsefulString()} but is {actual.ToUsefulString()}");
         }
     }
 
-    public static void ShouldBeGreaterThanOrEqualTo(this IComparable actual, IComparable expected)
+    public static void ShouldBeGreaterThanOrEqualTo<T>(this T? actual, T? expected)
+        where T : IComparable<T>
     {
         if (expected == null)
         {
@@ -323,16 +325,17 @@ public static class ShouldExtensionMethods
 
         if (actual == null)
         {
-            throw NewException("Should be greater than or equal to {0} but is [null]", expected);
+            throw new ShouldException($"Should be greater than or equal to {expected.ToUsefulString()} but is [null]");
         }
 
-        if (actual.CompareTo(expected.TryToChangeType(actual.GetType())) < 0)
+        if (actual.CompareTo(expected) < 0)
         {
-            throw NewException("Should be greater than or equal to {0} but is {1}", expected, actual);
+            throw new ShouldException($"Should be greater than or equal to {expected.ToUsefulString()} but is {actual.ToUsefulString()}");
         }
     }
 
-    public static void ShouldBeLessThan(this IComparable actual, IComparable expected)
+    public static void ShouldBeLessThan<T>(this T? actual, T? expected)
+        where T : IComparable<T>
     {
         if (expected == null)
         {
@@ -341,16 +344,17 @@ public static class ShouldExtensionMethods
 
         if (actual == null)
         {
-            throw NewException("Should be less than {0} but is [null]", expected);
+            throw new ShouldException($"Should be less than {expected.ToUsefulString()} but is [null]");
         }
 
-        if (actual.CompareTo(expected.TryToChangeType(actual.GetType())) >= 0)
+        if (actual.CompareTo(expected) >= 0)
         {
-            throw NewException("Should be less than {0} but is {1}", expected, actual);
+            throw new ShouldException($"Should be less than {expected.ToUsefulString()} but is {actual.ToUsefulString()}");
         }
     }
 
-    public static void ShouldBeLessThanOrEqualTo(this IComparable actual, IComparable expected)
+    public static void ShouldBeLessThanOrEqualTo<T>(this T? actual, T expected)
+        where T : IComparable<T>
     {
         if (expected == null)
         {
@@ -359,12 +363,12 @@ public static class ShouldExtensionMethods
 
         if (actual == null)
         {
-            throw NewException("Should be less than or equal to {0} but is [null]", expected);
+            throw new ShouldException($"Should be less than or equal to {expected.ToUsefulString()} but is [null]");
         }
 
-        if (actual.CompareTo(expected.TryToChangeType(actual.GetType())) > 0)
+        if (actual.CompareTo(expected) > 0)
         {
-            throw NewException("Should be less than or equal to {0} but is {1}", expected, actual);
+            throw new ShouldException($"Should be less than or equal to {expected.ToUsefulString()} but is {actual.ToUsefulString()}");
         }
     }
 

@@ -6,16 +6,4 @@ internal static class TypeExtensions
     {
         return type.GetGenericTypeDefinition().IsAssignableFrom(typeof(Nullable<>));
     }
-
-    public static object TryToChangeType(this object original, Type type)
-    {
-        try
-        {
-            return Convert.ChangeType(original, type);
-        }
-        catch
-        {
-            return original;
-        }
-    }
 }
