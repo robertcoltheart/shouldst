@@ -45,6 +45,16 @@ public static class ShouldExtensionMethods
         boolCondition.ShouldBeTrue();
     }
 
+    public static void ShouldBe<T>(this T actual, T expected)
+    {
+        actual.ShouldEqual(expected);
+    }
+
+    public static void ShouldNotBe<T>(this T actual, T expected)
+    {
+        actual.ShouldNotEqual(expected);
+    }
+
     public static void ShouldEqual<T>(this T actual, T expected)
     {
         if (AssertComparer<T>.Default.Compare(actual, expected) != 0)
@@ -175,20 +185,21 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldEachConformTo<T>(this IEnumerable<T> actual, Expression<Func<T, bool>> condition)
+    public static void ShouldAllBe<T>(this IEnumerable<T> actual, Expression<Func<T, bool>> condition)
     {
-        var source = new List<T>(actual);
-        var func = condition.Compile();
+        var predicate = condition.Compile();
 
-        var failingItems = source
-            .Where(x => func(x) == false)
+        var failing = actual
+            .Where(x => predicate(x) == false)
             .ToArray();
 
-        if (failingItems.Any())
+        if (failing.Any())
         {
-            throw new ShouldException(string.Format("Should contain only elements conforming to: {0}" + Environment.NewLine + "the following items did not meet the condition: {1}",
-                condition,
-                failingItems.EachToUsefulString()));
+            throw new ShouldException(
+                $"""
+                 Should contain only elements conforming to: {condition}
+                 the following items did not meet the condition: {failing.EachToUsefulString()}
+                 """);
         }
     }
 
@@ -218,13 +229,12 @@ public static class ShouldExtensionMethods
 
         if (noContain.Any())
         {
-            throw new ShouldException(string.Format(
-                "Should contain: {0}" + Environment.NewLine +
-                "entire list: {1}" + Environment.NewLine +
-                "does not contain: {2}",
-                itemsArray.EachToUsefulString(),
-                listArray.EachToUsefulString(),
-                noContain.EachToUsefulString()));
+            throw new ShouldException(
+                $"""
+                 Should contain: {itemsArray.EachToUsefulString()}
+                 entire list: {listArray.EachToUsefulString()}
+                 does not contain: {noContain.EachToUsefulString()}
+                 """);
         }
     }
 
@@ -235,11 +245,11 @@ public static class ShouldExtensionMethods
 
         if (!listArray.Any(func))
         {
-            throw new ShouldException(string.Format(
-                "Should contain elements conforming to: {0}" + Environment.NewLine +
-                "entire list: {1}",
-                condition,
-                listArray.EachToUsefulString()));
+            throw new ShouldException(
+                $"""
+                 Should contain elements conforming to: {condition}
+                 entire list: {listArray.EachToUsefulString()}
+                 """);
         }
     }
 
@@ -269,13 +279,12 @@ public static class ShouldExtensionMethods
 
         if (contains.Any())
         {
-            throw new ShouldException(string.Format(
-                "Should not contain: {0}" + Environment.NewLine +
-                "entire list: {1}" + Environment.NewLine +
-                "does contain: {2}",
-                itemsArray.EachToUsefulString(),
-                listArray.EachToUsefulString(),
-                contains.EachToUsefulString()));
+            throw new ShouldException(
+                $"""
+                 Should not contain: {itemsArray.EachToUsefulString()}
+                 entire list: {listArray.EachToUsefulString()}
+                 does contain: {contains.EachToUsefulString()}
+                 """);
         }
     }
 
@@ -288,13 +297,12 @@ public static class ShouldExtensionMethods
 
         if (contains.Any())
         {
-            throw new ShouldException(string.Format(
-                "No elements should conform to: {0}" + Environment.NewLine +
-                "entire list: {1}" + Environment.NewLine +
-                "does contain: {2}",
-                condition,
-                listArray.EachToUsefulString(),
-                contains.EachToUsefulString()));
+            throw new ShouldException(
+                $"""
+                 No elements should conform to: {condition}
+                 entire list: {listArray.EachToUsefulString()}
+                 does contain: {contains.EachToUsefulString()}
+                 """);
         }
     }
 
@@ -433,7 +441,7 @@ public static class ShouldExtensionMethods
 
         if (items.Any())
         {
-            throw NewException("Should be empty but contains:\n" + items.EachToUsefulString());
+            throw NewException($"Should be empty but contains:{Environment.NewLine}" + items.EachToUsefulString());
         }
     }
 
@@ -634,18 +642,19 @@ public static class ShouldExtensionMethods
 
         if (noContain.Any() || source.Any())
         {
-            var message = string.Format("Should contain only: {0}" + Environment.NewLine + "entire list: {1}",
-                itemsArray.EachToUsefulString(),
-                listArray.EachToUsefulString());
+            var message = $"""
+                           Should contain only: {itemsArray.EachToUsefulString()}
+                           entire list: {listArray.EachToUsefulString()}
+                           """;
 
             if (noContain.Any())
             {
-                message += "\ndoes not contain: " + noContain.EachToUsefulString();
+                message += $"{Environment.NewLine}does not contain: " + noContain.EachToUsefulString();
             }
 
             if (source.Any())
             {
-                message += "\ndoes contain but shouldn't: " + source.EachToUsefulString();
+                message += $"{Environment.NewLine}does contain but shouldn't: " + source.EachToUsefulString();
             }
 
             throw new ShouldException(message);
@@ -687,7 +696,7 @@ public static class ShouldExtensionMethods
         }
     }
 
-    private static IEnumerable<ShouldException> ShouldBeLikeInternal(object obj, object expected, string nodeName, HashSet<ReferentialEqualityTuple> visited)
+    private static IEnumerable<ShouldException> ShouldBeLikeInternal(object? obj, object? expected, string nodeName, HashSet<ReferentialEqualityTuple> visited)
     {
         var objExpectedTuple = new ReferentialEqualityTuple(obj, expected);
 
@@ -815,11 +824,11 @@ public static class ShouldExtensionMethods
         return null;
     }
 
-    private class ReferentialEqualityTuple(object obj, object expected)
+    private class ReferentialEqualityTuple(object? obj, object? expected)
     {
-        private readonly object obj = obj;
+        private readonly object? obj = obj;
 
-        private readonly object expected = expected;
+        private readonly object? expected = expected;
 
         public override int GetHashCode()
         {
