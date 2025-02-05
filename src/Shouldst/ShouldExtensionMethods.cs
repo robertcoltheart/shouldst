@@ -387,7 +387,7 @@ public static class ShouldExtensionMethods
 
     public static void ShouldBeCloseTo(this double actual, double expected)
     {
-        ShouldBeCloseTo(actual, expected, 0.0000001f);
+        ShouldBeCloseTo(actual, expected, 0.0000001d);
     }
 
     public static void ShouldBeCloseTo(this double actual, double expected, double tolerance)
@@ -431,11 +431,20 @@ public static class ShouldExtensionMethods
 
     public static void ShouldBeEmpty(this IEnumerable actual)
     {
-        var items = actual.Cast<object>().ToArray();
+        actual.Cast<object>().ShouldBeEmpty();
+    }
+
+    public static void ShouldBeEmpty<T>(this IEnumerable<T> actual)
+    {
+        var items = actual.ToArray();
 
         if (items.Any())
         {
-            throw NewException($"Should be empty but contains:{Environment.NewLine}" + items.EachToUsefulString());
+            throw new ShouldException(
+                $"""
+                 Should be empty but contains:
+                 {items.EachToUsefulString()}
+                 """);
         }
     }
 
@@ -448,15 +457,20 @@ public static class ShouldExtensionMethods
 
         if (!string.IsNullOrEmpty(actual))
         {
-            throw NewException("Should be empty but is {0}", actual);
+            throw new ShouldException($"Should be empty but is {actual.ToUsefulString()}");
         }
     }
 
     public static void ShouldNotBeEmpty(this IEnumerable actual)
     {
-        if (!actual.Cast<object>().Any())
+        actual.Cast<object>().ShouldNotBeEmpty();
+    }
+
+    public static void ShouldNotBeEmpty<T>(this IEnumerable<T> actual)
+    {
+        if (!actual.Any())
         {
-            throw NewException("Should not be empty but is");
+            throw new ShouldException("Should not be empty but is");
         }
     }
 
@@ -464,7 +478,7 @@ public static class ShouldExtensionMethods
     {
         if (string.IsNullOrEmpty(actual))
         {
-            throw NewException("Should not be empty but is");
+            throw new ShouldException("Should not be empty but is");
         }
     }
 
@@ -615,14 +629,14 @@ public static class ShouldExtensionMethods
 
     public static void ShouldContainOnly<T>(this IEnumerable<T> actual, IEnumerable<T> expected)
     {
-        var listArray = actual.ToArray();
-        var itemsArray = expected.ToArray();
+        var actualItems = actual.ToArray();
+        var expectedItems = expected.ToArray();
 
-        var source = new List<T>(listArray);
+        var source = new List<T>(actualItems);
         var noContain = new List<T>();
         var comparer = new AssertComparer<T>();
 
-        foreach (var item in itemsArray)
+        foreach (var item in expectedItems)
         {
             if (!source.Contains(item, comparer))
             {
@@ -636,10 +650,11 @@ public static class ShouldExtensionMethods
 
         if (noContain.Any() || source.Any())
         {
-            var message = $"""
-                           Should contain only: {itemsArray.EachToUsefulString()}
-                           entire list: {listArray.EachToUsefulString()}
-                           """;
+            var message =
+                $"""
+                 Should contain only: {expectedItems.EachToUsefulString()}
+                 entire list: {actualItems.EachToUsefulString()}
+                 """;
 
             if (noContain.Any())
             {
