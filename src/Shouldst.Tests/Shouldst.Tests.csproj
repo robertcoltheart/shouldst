@@ -9,7 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="TUnit" Version="0.10.19" />
+    <PackageReference Include="AwesomeAssertions" Version="8.0.0" />
+    <PackageReference Include="TUnit" Version="0.10.24" />
   </ItemGroup>
 
   <ItemGroup>

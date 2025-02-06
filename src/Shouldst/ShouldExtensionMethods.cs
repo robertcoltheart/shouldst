@@ -185,8 +185,13 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldAllBe<T>(this IEnumerable<T> actual, Expression<Func<T, bool>> condition)
+    public static void ShouldAllBe<T>(this IEnumerable<T>? actual, Expression<Func<T, bool>> condition)
     {
+        if (actual == null)
+        {
+            throw new ShouldException($"Should contain elements matching {condition} but is [null]");
+        }
+
         var predicate = condition.Compile();
 
         var failing = actual
@@ -197,26 +202,36 @@ public static class ShouldExtensionMethods
         {
             throw new ShouldException(
                 $"""
-                 Should contain only elements conforming to: {condition}
+                 Should contain elements matching: {condition}
                  the following items did not meet the condition: {failing.EachToUsefulString()}
                  """);
         }
     }
 
-    public static void ShouldContain<T>(this IEnumerable<T> actual, params T[] expected)
+    public static void ShouldContain<T>(this IEnumerable<T>? actual, params T[] expected)
     {
         actual.ShouldContain(expected.AsEnumerable());
     }
 
-    public static void ShouldContain(this IEnumerable actual, params object[] expected)
+    public static void ShouldContain(this IEnumerable? actual, params object[] expected)
     {
-        actual.Cast<object>().ShouldContain(expected.AsEnumerable());
+        actual?.Cast<object>().ShouldContain(expected.AsEnumerable());
     }
 
-    public static void ShouldContain<T>(this IEnumerable<T> actual, params IEnumerable<T> expected)
+    public static void ShouldContain<T>(this IEnumerable<T>? actual, params IEnumerable<T> expected)
     {
-        var actualItems = actual.ToArray();
         var expectedItems = expected.ToArray();
+
+        if (actual == null)
+        {
+            throw new ShouldException(
+                $"""
+                 Should contain: {expectedItems.EachToUsefulString()}
+                 but is [null]
+                 """);
+        }
+
+        var actualItems = actual.ToArray();
 
         var missing = expectedItems
             .Where(x => !actualItems.Contains(x, AssertComparer<T>.Default))
@@ -233,9 +248,19 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldContain<T>(this IEnumerable<T> actual, Expression<Func<T, bool>> condition)
+    public static void ShouldContain<T>(this IEnumerable<T>? actual, Expression<Func<T, bool>> condition)
     {
         var predicate = condition.Compile();
+
+        if (actual == null)
+        {
+            throw new ShouldException(
+                $"""
+                 Should contain elements conforming to: {condition}
+                 but is [null]
+                 """);
+        }
+
         var actualItems = actual.ToArray();
 
         if (!actualItems.Any(predicate))
@@ -248,20 +273,30 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldNotContain(this IEnumerable actual, params object[] expected)
+    public static void ShouldNotContain(this IEnumerable? actual, params object[] expected)
     {
-        actual.Cast<object>().ShouldNotContain(expected.AsEnumerable());
+        actual?.Cast<object>().ShouldNotContain(expected.AsEnumerable());
     }
 
-    public static void ShouldNotContain<T>(this IEnumerable<T> actual, params T[] expected)
+    public static void ShouldNotContain<T>(this IEnumerable<T>? actual, params T[] expected)
     {
-        actual.ShouldNotContain(expected.AsEnumerable());
+        actual?.ShouldNotContain(expected.AsEnumerable());
     }
 
-    public static void ShouldNotContain<T>(this IEnumerable<T> actual, params IEnumerable<T> expected)
+    public static void ShouldNotContain<T>(this IEnumerable<T>? actual, params IEnumerable<T> expected)
     {
-        var actualItems = actual.ToArray();
         var expectedItems = expected.ToArray();
+
+        if (actual == null)
+        {
+            throw new ShouldException(
+                $"""
+                 Should not contain: {expectedItems.EachToUsefulString()}
+                 but is [null]
+                 """);
+        }
+
+        var actualItems = actual.ToArray();
 
         var contains = expectedItems
             .Where(x => actualItems.Contains(x, AssertComparer<T>.Default))
@@ -278,8 +313,17 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldNotContain<T>(this IEnumerable<T> actual, Expression<Func<T, bool>> condition)
+    public static void ShouldNotContain<T>(this IEnumerable<T>? actual, Expression<Func<T, bool>> condition)
     {
+        if (actual == null)
+        {
+            throw new ShouldException(
+                $"""
+                 No elements should conform to: {condition}
+                 but is [null]
+                 """);
+        }
+
         var predicate = condition.Compile();
 
         var actualItems = actual.ToArray();
@@ -296,7 +340,7 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldBeGreaterThan<T>(this T? actual, T? expected)
+    public static void ShouldBeGreaterThan<T>(this T? actual, T expected)
         where T : IComparable<T>
     {
         if (expected == null)
@@ -315,7 +359,7 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldBeGreaterThanOrEqualTo<T>(this T? actual, T? expected)
+    public static void ShouldBeGreaterThanOrEqualTo<T>(this T? actual, T expected)
         where T : IComparable<T>
     {
         if (expected == null)
@@ -334,7 +378,7 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldBeLessThan<T>(this T? actual, T? expected)
+    public static void ShouldBeLessThan<T>(this T? actual, T expected)
         where T : IComparable<T>
     {
         if (expected == null)
@@ -377,6 +421,11 @@ public static class ShouldExtensionMethods
         ShouldBeCloseTo(actual, expected, 0.0000001f);
     }
 
+    public static void ShouldBeCloseTo(this float? actual, float expected)
+    {
+        ShouldBeCloseTo(actual, expected, 0.0000001f);
+    }
+
     public static void ShouldBeCloseTo(this float actual, float expected, float tolerance)
     {
         if (Math.Abs(actual - expected) > tolerance)
@@ -385,7 +434,22 @@ public static class ShouldExtensionMethods
         }
     }
 
+    public static void ShouldBeCloseTo(this float? actual, float expected, float tolerance)
+    {
+        if (actual == null)
+        {
+            throw new ShouldException($"Should be within {tolerance.ToUsefulString()} of {expected.ToUsefulString()} but is [null]");
+        }
+
+        ShouldBeCloseTo(actual.Value, expected, tolerance);
+    }
+
     public static void ShouldBeCloseTo(this double actual, double expected)
+    {
+        ShouldBeCloseTo(actual, expected, 0.0000001d);
+    }
+
+    public static void ShouldBeCloseTo(this double? actual, double expected)
     {
         ShouldBeCloseTo(actual, expected, 0.0000001d);
     }
@@ -398,7 +462,22 @@ public static class ShouldExtensionMethods
         }
     }
 
+    public static void ShouldBeCloseTo(this double? actual, double expected, double tolerance)
+    {
+        if (actual == null)
+        {
+            throw new ShouldException($"Should be within {tolerance.ToUsefulString()} of {expected.ToUsefulString()} but is [null]");
+        }
+
+        ShouldBeCloseTo(actual.Value, expected, tolerance);
+    }
+
     public static void ShouldBeCloseTo(this decimal actual, decimal expected)
+    {
+        ShouldBeCloseTo(actual, expected, 0.0000001m);
+    }
+
+    public static void ShouldBeCloseTo(this decimal? actual, decimal expected)
     {
         ShouldBeCloseTo(actual, expected, 0.0000001m);
     }
@@ -411,12 +490,32 @@ public static class ShouldExtensionMethods
         }
     }
 
+    public static void ShouldBeCloseTo(this decimal? actual, decimal expected, decimal tolerance)
+    {
+        if (actual == null)
+        {
+            throw new ShouldException($"Should be within {tolerance.ToUsefulString()} of {expected.ToUsefulString()} but is [null]");
+        }
+
+        ShouldBeCloseTo(actual.Value, expected, tolerance);
+    }
+
     public static void ShouldBeCloseTo(this TimeSpan actual, TimeSpan expected, TimeSpan tolerance)
     {
         if (Math.Abs(actual.Ticks - expected.Ticks) > tolerance.Ticks)
         {
             throw new ShouldException($"Should be within {tolerance.ToUsefulString()} of {expected.ToUsefulString()} but is {actual.ToUsefulString()}");
         }
+    }
+
+    public static void ShouldBeCloseTo(this TimeSpan? actual, TimeSpan expected, TimeSpan tolerance)
+    {
+        if (actual == null)
+        {
+            throw new ShouldException($"Should be within {tolerance.ToUsefulString()} of {expected.ToUsefulString()} but is [null]");
+        }
+
+        ShouldBeCloseTo(actual.Value, expected, tolerance);
     }
 
     public static void ShouldBeCloseTo(this DateTime actual, DateTime expected, TimeSpan tolerance)
@@ -429,13 +528,28 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldBeEmpty(this IEnumerable actual)
+    public static void ShouldBeCloseTo(this DateTime? actual, DateTime expected, TimeSpan tolerance)
     {
-        actual.Cast<object>().ShouldBeEmpty();
+        if (actual == null)
+        {
+            throw new ShouldException($"Should be within {tolerance.ToUsefulString()} of {expected.ToUsefulString()} but is [null]");
+        }
+
+        ShouldBeCloseTo(actual.Value, expected, tolerance);
     }
 
-    public static void ShouldBeEmpty<T>(this IEnumerable<T> actual)
+    public static void ShouldBeEmpty(this IEnumerable? actual)
     {
+        actual?.Cast<object>().ShouldBeEmpty();
+    }
+
+    public static void ShouldBeEmpty<T>(this IEnumerable<T>? actual)
+    {
+        if (actual == null)
+        {
+            throw new ShouldException("Should be empty but is [null]");
+        }
+
         var items = actual.ToArray();
 
         if (items.Any())
@@ -461,13 +575,18 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldNotBeEmpty(this IEnumerable actual)
+    public static void ShouldNotBeEmpty(this IEnumerable? actual)
     {
-        actual.Cast<object>().ShouldNotBeEmpty();
+        actual?.Cast<object>().ShouldNotBeEmpty();
     }
 
-    public static void ShouldNotBeEmpty<T>(this IEnumerable<T> actual)
+    public static void ShouldNotBeEmpty<T>(this IEnumerable<T>? actual)
     {
+        if (actual == null)
+        {
+            throw new ShouldException("Should not be empty but is [null]");
+        }
+
         if (!actual.Any())
         {
             throw new ShouldException("Should not be empty but is");
