@@ -42,8 +42,8 @@ public class MatchTests
     [Test]
     public void AssertMatchWithNonMatchingRegexThrows()
     {
-        "my value".ShouldMatch("wrong.*");
-        "my value".ShouldMatch(new Regex("wrong.*"));
+        Assert.Throws<ShouldException>(() => "my value".ShouldMatch("wrong.*"));
+        Assert.Throws<ShouldException>(() => "my value".ShouldMatch(new Regex("wrong.*")));
     }
 
     private record MyRecord(string Value);
