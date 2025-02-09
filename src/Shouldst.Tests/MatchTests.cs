@@ -1,4 +1,6 @@
-﻿namespace Shouldst.Tests;
+﻿using System.Text.RegularExpressions;
+
+namespace Shouldst.Tests;
 
 public class MatchTests
 {
@@ -28,6 +30,20 @@ public class MatchTests
         var value = new MyRecord("value");
 
         Assert.Throws<ShouldException>(() => value.ShouldMatch(x => x.Value == "wrong"));
+    }
+
+    [Test]
+    public void AssertMatchWithMatchingRegexSucceeds()
+    {
+        "my value".ShouldMatch("my.*");
+        "my value".ShouldMatch(new Regex("my.*"));
+    }
+
+    [Test]
+    public void AssertMatchWithNonMatchingRegexThrows()
+    {
+        Assert.Throws<ShouldException>(() => "my value".ShouldMatch("wrong.*"));
+        Assert.Throws<ShouldException>(() => "my value".ShouldMatch(new Regex("wrong.*")));
     }
 
     private record MyRecord(string Value);
