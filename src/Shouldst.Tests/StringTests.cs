@@ -72,8 +72,8 @@ public class StringTests
     [Test]
     public void AssertSurroundsWithMissingThrows()
     {
-        "'value'".ShouldBeSurroundedWith("@");
-        "'value'".ShouldBeSurroundedWith("'", "@");
-        "'value'".ShouldBeSurroundedWith("@", "'");
+        Assert.Throws<ShouldException>(() => "'value'".ShouldBeSurroundedWith("@"));
+        Assert.Throws<ShouldException>(() => "'value'".ShouldBeSurroundedWith("'", "@"));
+        Assert.Throws<ShouldException>(() => "'value'".ShouldBeSurroundedWith("@", "'"));
     }
 }
