@@ -3,7 +3,7 @@
 public class SameTests
 {
     [Test]
-    public void AssertSameWithSameSucceeds()
+    public void ShouldBeSameWithSameSucceeds()
     {
         var value = new object();
 
@@ -11,7 +11,7 @@ public class SameTests
     }
 
     [Test]
-    public void AssertSameWithDifferentThrows()
+    public void ShouldBeSameWithDifferentThrows()
     {
         var value = new object();
 
@@ -19,7 +19,7 @@ public class SameTests
     }
 
     [Test]
-    public void AssertNotSameWithSameThrows()
+    public void ShouldNotBeSameWithSameThrows()
     {
         var value = new object();
 
@@ -27,7 +27,7 @@ public class SameTests
     }
 
     [Test]
-    public void AssertNotSameWithDifferentSucceeds()
+    public void ShouldNotBeSameWithDifferentSucceeds()
     {
         var value = new object();
 
@@ -35,25 +35,25 @@ public class SameTests
     }
 
     [Test]
-    public void AssertSameWithSameValueTypeThrows()
+    public void ShouldBeSameWithSameValueTypeThrows()
     {
         Assert.Throws<ShouldException>(() => 1.ShouldBeTheSameAs(1));
     }
 
     [Test]
-    public void AssertNotSameWithSameValueTypeSucceeds()
+    public void ShouldNotBeSameWithSameValueTypeSucceeds()
     {
         1.ShouldNotBeTheSameAs(1);
     }
 
     [Test]
-    public void AssertSameWithDifferentValueTypeThrows()
+    public void ShouldBeSameWithDifferentValueTypeThrows()
     {
         Assert.Throws<ShouldException>(() => 1.ShouldBeTheSameAs(2));
     }
 
     [Test]
-    public void AssertNotSameWithDifferentValueTypeSucceeds()
+    public void ShouldNotBeSameWithDifferentValueTypeSucceeds()
     {
         1.ShouldNotBeTheSameAs(2);
     }

@@ -3,7 +3,7 @@
 public class ReferenceTests
 {
     [Test]
-    public void AssertSameWithSameSucceeds()
+    public void ShouldBeSameWithSameSucceeds()
     {
         var value = new object();
 
@@ -11,7 +11,7 @@ public class ReferenceTests
     }
 
     [Test]
-    public void AssertSameWithDifferentThrows()
+    public void ShouldBeSameWithDifferentThrows()
     {
         var value = new object();
 
@@ -19,7 +19,7 @@ public class ReferenceTests
     }
 
     [Test]
-    public void AssertSameWithNullThrows()
+    public void ShouldBeSameWithNullThrows()
     {
         var value = new object();
 
@@ -27,7 +27,7 @@ public class ReferenceTests
     }
 
     [Test]
-    public void AssertDifferentWithSameThrows()
+    public void ShouldBeDifferentWithSameThrows()
     {
         var value = new object();
 
@@ -35,7 +35,7 @@ public class ReferenceTests
     }
 
     [Test]
-    public void AssertDifferentWithDifferentSucceeds()
+    public void ShouldBeDifferentWithDifferentSucceeds()
     {
         var value = new object();
 
@@ -43,7 +43,7 @@ public class ReferenceTests
     }
 
     [Test]
-    public void AssertDifferentWithNullSucceeds()
+    public void ShouldBeDifferentWithNullSucceeds()
     {
         var value = new object();
 
@@ -51,7 +51,7 @@ public class ReferenceTests
     }
 
     [Test]
-    public void AssertSameWithBothNullSucceeds()
+    public void ShouldBeSameWithBothNullSucceeds()
     {
         var value = default(object);
 

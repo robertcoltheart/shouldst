@@ -3,7 +3,7 @@
 public class ExactTypeTests
 {
     [Test]
-    public void AssertExactTypeWithExactTypeSucceeds()
+    public void ShouldBeOfExactTypeWithExactTypeSucceeds()
     {
         var value = new MyType();
 
@@ -12,7 +12,7 @@ public class ExactTypeTests
     }
 
     [Test]
-    public void AssertExactTypeWithDifferentTypeThrows()
+    public void ShouldBeOfExactTypeWithDifferentTypeThrows()
     {
         var value = new MyType();
 
@@ -21,7 +21,7 @@ public class ExactTypeTests
     }
 
     [Test]
-    public void AssertExactTypeWithDerivedTypeThrows()
+    public void ShouldBeOfExactTypeWithDerivedTypeThrows()
     {
         var value = new MyType();
 
@@ -30,7 +30,7 @@ public class ExactTypeTests
     }
 
     [Test]
-    public void AssertExactTypeWithNullThrows()
+    public void ShouldBeOfExactTypeWithNullThrows()
     {
         var value = default(MyType);
 
@@ -39,7 +39,7 @@ public class ExactTypeTests
     }
 
     [Test]
-    public void AssertNotExactTypeWithExactTypeThrows()
+    public void ShouldNotBeOfExactTypeWithExactTypeThrows()
     {
         var value = new MyType();
 
@@ -48,7 +48,7 @@ public class ExactTypeTests
     }
 
     [Test]
-    public void AssertNotExactTypeWithDifferentTypeSucceeds()
+    public void ShouldNotBeOfExactTypeWithDifferentTypeSucceeds()
     {
         var value = new MyType();
 
@@ -57,7 +57,7 @@ public class ExactTypeTests
     }
 
     [Test]
-    public void AssertNotExactTypeWithDerivedTypeSucceeds()
+    public void AssertNoShouldNotBeOfExactTypeWithDerivedTypeSucceeds()
     {
         var value = new MyType();
 
@@ -66,7 +66,7 @@ public class ExactTypeTests
     }
 
     [Test]
-    public void AssertNotExactTypeWithNullThrows()
+    public void ShouldNotBeOfExactTypeWithNullThrows()
     {
         var value = default(MyType);
 
