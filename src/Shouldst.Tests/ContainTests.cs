@@ -5,14 +5,14 @@ namespace Shouldst.Tests;
 public class ContainTests
 {
     [Test]
-    public void ShouldContainWithContainedPrimitiveValueSucceeds()
+    public void ShouldContainWithMatchingPrimitiveValueSucceeds()
     {
         GetPrimitiveValues().ShouldContain(1, 2);
         GetNonGeneric(GetPrimitiveValues()).ShouldContain(1, 2);
     }
 
     [Test]
-    public void ShouldNotContainWithContainedPrimitiveValueThrows()
+    public void ShouldNotContainWithMatchingPrimitiveValueThrows()
     {
         Assert.Throws<ShouldException>(() => GetPrimitiveValues().ShouldNotContain(1, 2));
         Assert.Throws<ShouldException>(() => GetNonGeneric(GetPrimitiveValues()).ShouldNotContain(1, 2));
@@ -33,14 +33,14 @@ public class ContainTests
     }
 
     [Test]
-    public void ShouldContainWithContainedComplexValueSucceeds()
+    public void ShouldContainWithMatchingComplexValueSucceeds()
     {
         GetComplexValues().ShouldContain(new MyRecord("val1", 1), new MyRecord("val2", 2));
         GetNonGeneric(GetComplexValues()).ShouldContain(new MyRecord("val1", 1), new MyRecord("val2", 2));
     }
 
     [Test]
-    public void ShouldNotContainWithContainedComplexValueThrows()
+    public void ShouldNotContainWithMatchingComplexValueThrows()
     {
         Assert.Throws<ShouldException>(() => GetComplexValues().ShouldNotContain(new MyRecord("val1", 1), new MyRecord("val2", 2)));
         Assert.Throws<ShouldException>(() => GetNonGeneric(GetComplexValues()).ShouldNotContain(new MyRecord("val1", 1), new MyRecord("val2", 2)));
@@ -61,13 +61,13 @@ public class ContainTests
     }
 
     [Test]
-    public void ShouldContainWithContainedExpressionSucceeds()
+    public void ShouldContainWithMatchingExpressionSucceeds()
     {
         GetComplexValues().ShouldContain(x => x.IntValue == 1);
     }
 
     [Test]
-    public void ShouldNotContainWithContainedExpressionThrows()
+    public void ShouldNotContainWithMatchingExpressionThrows()
     {
         Assert.Throws<ShouldException>(() => GetComplexValues().ShouldNotContain(x => x.IntValue == 1));
     }

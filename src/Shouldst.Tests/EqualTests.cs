@@ -4,7 +4,7 @@ public class EqualTests
 {
     [Test]
     [MethodDataSource(nameof(GetPrimitiveTypes))]
-    public void AssertEqualWithEqualPrimitiveTypesSucceeds(object value)
+    public void ShouldBeEqualWithEqualPrimitiveTypesSucceeds(object value)
     {
         value.ShouldBe(value);
         value.ShouldEqual(value);
@@ -12,7 +12,7 @@ public class EqualTests
 
     [Test]
     [MethodDataSource(nameof(GetPrimitiveTypes))]
-    public void AssertEqualWithNotEqualPrimitiveTypesThrows(object actual, object expected)
+    public void ShouldBeEqualWithNotEqualPrimitiveTypesThrows(object actual, object expected)
     {
         Assert.Throws<ShouldException>(() => actual.ShouldBe(expected));
         Assert.Throws<ShouldException>(() => actual.ShouldEqual(expected));
@@ -20,7 +20,7 @@ public class EqualTests
 
     [Test]
     [MethodDataSource(nameof(GetPrimitiveTypes))]
-    public void AssertNotEqualWithEqualPrimitiveTypesThrows(object value)
+    public void ShouldNotBeEqualWithEqualPrimitiveTypesThrows(object value)
     {
         Assert.Throws<ShouldException>(() => value.ShouldNotBe(value));
         Assert.Throws<ShouldException>(() => value.ShouldNotEqual(value));
@@ -28,14 +28,14 @@ public class EqualTests
 
     [Test]
     [MethodDataSource(nameof(GetPrimitiveTypes))]
-    public void AssertNotEqualWithNotEqualPrimitiveTypesThrows(object actual, object expected)
+    public void ShouldNotBeEqualWithNotEqualPrimitiveTypesThrows(object actual, object expected)
     {
         actual.ShouldNotBe(expected);
         actual.ShouldNotEqual(expected);
     }
 
     [Test]
-    public void AssertEqualWithEqualCustomTypeSucceeds()
+    public void ShouldBeEqualWithEqualCustomTypeSucceeds()
     {
         var actual = new SimpleRecord("value", 1);
         var expected = new SimpleRecord("value", 1);
@@ -45,7 +45,7 @@ public class EqualTests
     }
 
     [Test]
-    public void AssertEqualWithNotEqualCustomTypeThrows()
+    public void ShouldBeEqualWithNotEqualCustomTypeThrows()
     {
         var actual = new SimpleRecord("value", 1);
         var expected = new SimpleRecord("value2", 2);
@@ -55,7 +55,7 @@ public class EqualTests
     }
 
     [Test]
-    public void AssertNotEqualWithEqualCustomTypeThrows()
+    public void ShouldNotBeEqualWithEqualCustomTypeThrows()
     {
         var actual = new SimpleRecord("value", 1);
         var expected = new SimpleRecord("value", 1);
@@ -65,7 +65,7 @@ public class EqualTests
     }
 
     [Test]
-    public void AssertNotEqualWithNotEqualCustomTypesThrows()
+    public void ShouldNotBeEqualWithNotEqualCustomTypesThrows()
     {
         var actual = new SimpleRecord("value", 1);
         var expected = new SimpleRecord("value2", 2);
@@ -76,7 +76,7 @@ public class EqualTests
 
     [Test]
     [MethodDataSource(nameof(GetEqualEnumerableTypes))]
-    public void AssertEqualWithEqualEnumerableTypesSucceeds(object[] actual, object[] expected)
+    public void ShouldBeEqualWithEqualEnumerableTypesSucceeds(object[] actual, object[] expected)
     {
         actual.ShouldBe(expected);
         actual.ShouldEqual(expected);
@@ -84,7 +84,7 @@ public class EqualTests
 
     [Test]
     [MethodDataSource(nameof(GetEqualEnumerableTypes))]
-    public void AssertNotEqualWithEqualEnumerableTypesThrows(object[] actual, object[] expected)
+    public void ShouldNotBeEqualWithEqualEnumerableTypesThrows(object[] actual, object[] expected)
     {
         Assert.Throws<ShouldException>(() => actual.ShouldNotBe(expected));
         Assert.Throws<ShouldException>(() => actual.ShouldNotEqual(expected));
@@ -92,7 +92,7 @@ public class EqualTests
 
     [Test]
     [MethodDataSource(nameof(GetNotEqualEnumerableTypes))]
-    public void AssertEqualWithNotEqualEnumerableTypesThrows(object[] actual, object[] expected)
+    public void ShouldBeEqualWithNotEqualEnumerableTypesThrows(object[] actual, object[] expected)
     {
         Assert.Throws<ShouldException>(() => actual.ShouldBe(expected));
         Assert.Throws<ShouldException>(() => actual.ShouldEqual(expected));
@@ -100,14 +100,14 @@ public class EqualTests
 
     [Test]
     [MethodDataSource(nameof(GetNotEqualEnumerableTypes))]
-    public void AssertNotEqualWithNotEqualEnumerableTypesSucceeds(object[] actual, object[] expected)
+    public void ShouldNotBeEqualWithNotEqualEnumerableTypesSucceeds(object[] actual, object[] expected)
     {
         actual.ShouldNotBe(expected);
         actual.ShouldNotEqual(expected);
     }
 
     [Test]
-    public void AssertEqualWithEqualObjectsSucceeds()
+    public void ShouldBeEqualWithEqualObjectsSucceeds()
     {
         var value = new object();
 
@@ -116,7 +116,7 @@ public class EqualTests
     }
 
     [Test]
-    public void AssertNotEqualWithNotEqualObjectsSucceeds()
+    public void ShouldNotBeEqualWithNotEqualObjectsSucceeds()
     {
         var value = new object();
 
@@ -125,7 +125,7 @@ public class EqualTests
     }
 
     [Test]
-    public void AssertEqualWithUnevenEnumerableTypesThrows()
+    public void ShouldBeEqualWithUnevenEnumerableTypesThrows()
     {
         var actual = new[] { 1, 2, 3 };
         var expected = new[] { 1, 2 };
@@ -135,7 +135,7 @@ public class EqualTests
     }
 
     [Test]
-    public void AssertNotEqualWithUnevenEnumerableTypesSucceeds()
+    public void ShouldNotBeEqualWithUnevenEnumerableTypesSucceeds()
     {
         var actual = new[] { 1, 2, 3 };
         var expected = new[] { 1, 2 };

@@ -3,7 +3,7 @@
 public class CloseTests
 {
     [Test]
-    public void AssertCloseToWithCloseSucceeds()
+    public void ShouldBeCloseToWithCloseSucceeds()
     {
         1f.ShouldBeCloseTo(1f);
         1d.ShouldBeCloseTo(1d);
@@ -11,7 +11,7 @@ public class CloseTests
     }
 
     [Test]
-    public void AssertCloseToWithFarAwayThrows()
+    public void ShouldBeCloseToWithFarAwayThrows()
     {
         Assert.Throws<ShouldException>(() => 1f.ShouldBeCloseTo(2f));
         Assert.Throws<ShouldException>(() => 1d.ShouldBeCloseTo(2d));
@@ -19,7 +19,7 @@ public class CloseTests
     }
 
     [Test]
-    public void AssertCloseToWithCloseToleranceSucceeds()
+    public void ShouldBeCloseToWithCloseToleranceSucceeds()
     {
         1f.ShouldBeCloseTo(1.1f, 0.15f);
         1d.ShouldBeCloseTo(1.1d, 0.15d);
@@ -29,7 +29,7 @@ public class CloseTests
     }
 
     [Test]
-    public void AssertCloseToWithFarAwayToleranceThrows()
+    public void ShouldBeCloseToWithFarAwayToleranceThrows()
     {
         Assert.Throws<ShouldException>(() => 1f.ShouldBeCloseTo(2f, 0.15f));
         Assert.Throws<ShouldException>(() => 1d.ShouldBeCloseTo(2d, 0.15d));

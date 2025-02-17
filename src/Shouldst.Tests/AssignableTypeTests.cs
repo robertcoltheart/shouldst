@@ -3,7 +3,7 @@
 public class AssignableTypeTests
 {
     [Test]
-    public void AssertAssignableTypeWithSameSucceeds()
+    public void ShouldBeAssignableToTypeWithSameTypeSucceeds()
     {
         var value = new MyType();
 
@@ -12,7 +12,7 @@ public class AssignableTypeTests
     }
 
     [Test]
-    public void AssertNotAssignableTypeWithSameThrows()
+    public void ShouldNotBeAssignableToTypeWithSameTypeThrows()
     {
         var value = new MyType();
 
@@ -21,7 +21,7 @@ public class AssignableTypeTests
     }
 
     [Test]
-    public void AssertAssignableTypeWithDifferentThrows()
+    public void ShouldBeAssignableToTypeWithDifferentTypeThrows()
     {
         var value = new MyType();
 
@@ -30,7 +30,7 @@ public class AssignableTypeTests
     }
 
     [Test]
-    public void AssertNotAssignableTypeWithDifferentSucceeds()
+    public void ShouldNotBeAssignableToTypeWithDifferentTypeSucceeds()
     {
         var value = new MyType();
 
@@ -39,7 +39,7 @@ public class AssignableTypeTests
     }
 
     [Test]
-    public void AssertAssignableTypeWithDerivedSucceeds()
+    public void ShouldBeAssignableToTypeWithDerivedTypeSucceeds()
     {
         var value = new MyDerivedType();
 
@@ -48,7 +48,7 @@ public class AssignableTypeTests
     }
 
     [Test]
-    public void AssertAssignableTypeWithImplementedSucceeds()
+    public void ShouldBeAssignableToTypeWithImplementedTypeSucceeds()
     {
         var value = new MyDerivedType();
 
@@ -57,7 +57,7 @@ public class AssignableTypeTests
     }
 
     [Test]
-    public void AssertNotAssignableTypeWithDerivedThrows()
+    public void ShouldNotBeAssignableToTypeWithDerivedTypeThrows()
     {
         var value = new MyDerivedType();
 
@@ -66,7 +66,7 @@ public class AssignableTypeTests
     }
 
     [Test]
-    public void AssertNotAssignableTypeWithImplementedThrows()
+    public void ShouldNotBeAssignableToTypeWithImplementedTypeThrows()
     {
         var value = new MyDerivedType();
 

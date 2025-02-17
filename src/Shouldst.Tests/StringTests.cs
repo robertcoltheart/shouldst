@@ -3,37 +3,37 @@
 public class StringTests
 {
     [Test]
-    public void AssertContainsWithSubstringSucceeds()
+    public void ShouldContainWithSubstringSucceeds()
     {
         "this value".ShouldContain("val");
     }
 
     [Test]
-    public void AssertContainsWithMissingThrows()
+    public void ShouldContainWithMissingThrows()
     {
         Assert.Throws<ShouldException>(() => "this value".ShouldContain("missing"));
     }
 
     [Test]
-    public void AssertNotContainsWithSubstringThrows()
+    public void ShouldNotContainWithSubstringThrows()
     {
         Assert.Throws<ShouldException>(() => "this value".ShouldNotContain("val"));
     }
 
     [Test]
-    public void AssertNotContainsWithMissingSucceeds()
+    public void ShouldNotContainWithMissingSucceeds()
     {
         "this value".ShouldNotContain("missing");
     }
 
     [Test]
-    public void AssertEqualsIgnoreCaseWithMatchingSucceeds()
+    public void ShouldEqualIgnoreCaseWithMatchingSucceeds()
     {
         "this".ShouldEqualIgnoringCase("THIS");
     }
 
     [Test]
-    public void AssertEqualsIgnoreCaseWithMissingThrows()
+    public void ShouldEqualIgnoreCaseWithMissingThrows()
     {
         Assert.Throws<ShouldException>(() => "this".ShouldEqualIgnoringCase("missing"));
     }
@@ -51,26 +51,26 @@ public class StringTests
     }
 
     [Test]
-    public void AssertEndsWithStringWithSubstringSucceeds()
+    public void ShouldEndWithStringWithSubstringSucceeds()
     {
         "this value".ShouldEndWith(" value");
     }
 
     [Test]
-    public void AssertEndsWithStringWithMissingThrows()
+    public void ShouldEndWithStringWithMissingThrows()
     {
         Assert.Throws<ShouldException>(() => "this value".ShouldEndWith("missing"));
     }
 
     [Test]
-    public void AssertSurroundsWithMatchingSucceeds()
+    public void ShouldBeSurroundedWithMatchingSucceeds()
     {
         "'value'".ShouldBeSurroundedWith("'");
         "'value'".ShouldBeSurroundedWith("'", "'");
     }
 
     [Test]
-    public void AssertSurroundsWithMissingThrows()
+    public void ShouldBeSurroundedWithMissingThrows()
     {
         Assert.Throws<ShouldException>(() => "'value'".ShouldBeSurroundedWith("@"));
         Assert.Throws<ShouldException>(() => "'value'".ShouldBeSurroundedWith("'", "@"));

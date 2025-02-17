@@ -3,67 +3,67 @@
 public class BooleanTests
 {
     [Test]
-    public void AssertTrueWithTrueSucceeds()
+    public void ShouldBeTrueWithTrueSucceeds()
     {
         true.ShouldBeTrue();
     }
 
     [Test]
-    public void AsserTrueWithFalseThrows()
+    public void ShouldBeTrueWithFalseThrows()
     {
         Assert.Throws<ShouldException>(() => false.ShouldBeTrue());
     }
 
     [Test]
-    public void AssertFalseWithFalseSucceeds()
+    public void ShouldBeFalseWithFalseSucceeds()
     {
         false.ShouldBeFalse();
     }
 
     [Test]
-    public void AssertFalseWithTrueThrows()
+    public void ShouldBeFalseWithTrueThrows()
     {
         Assert.Throws<ShouldException>(() => true.ShouldBeFalse());
     }
 
     [Test]
     [Arguments(true)]
-    public void AssertTrueWithNullableTrueSucceeds(bool? value)
+    public void ShouldBeTrueWithNullableTrueSucceeds(bool? value)
     {
         value.ShouldBeTrue();
     }
 
     [Test]
     [Arguments(null)]
-    public void AssertTrueWithNullThrows(bool? value)
+    public void ShouldBeTrueWithNullThrows(bool? value)
     {
         Assert.Throws<ShouldException>(() => value.ShouldBeTrue());
     }
 
     [Test]
     [Arguments(false)]
-    public void AssertTrueWithNullableFalseThrows(bool? value)
+    public void ShouldBeTrueWithNullableFalseThrows(bool? value)
     {
         Assert.Throws<ShouldException>(() => value.ShouldBeTrue());
     }
 
     [Test]
     [Arguments(true)]
-    public void AssertFalseWithNullableTrueThrows(bool? value)
+    public void ShouldBeFalseWithNullableTrueThrows(bool? value)
     {
         Assert.Throws<ShouldException>(() => value.ShouldBeFalse());
     }
 
     [Test]
     [Arguments(null)]
-    public void AssertFalseWithNullThrows(bool? value)
+    public void ShouldBeFalseWithNullThrows(bool? value)
     {
         Assert.Throws<ShouldException>(() => value.ShouldBeFalse());
     }
 
     [Test]
     [Arguments(false)]
-    public void AssertFalseWithNullableFalseSucceeds(bool? value)
+    public void ShouldBeFalseWithNullableFalseSucceeds(bool? value)
     {
         value.ShouldBeFalse();
     }

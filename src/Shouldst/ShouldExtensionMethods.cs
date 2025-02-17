@@ -743,7 +743,7 @@ public static class ShouldExtensionMethods
 
     public static void ShouldContainOnly<T>(this IEnumerable<T> actual, params T[] expected)
     {
-        actual.ShouldContainOnly((IEnumerable<T>)expected);
+        actual.ShouldContainOnly(expected.AsEnumerable());
     }
 
     public static void ShouldContainOnly<T>(this IEnumerable<T> actual, IEnumerable<T> expected)
@@ -752,14 +752,14 @@ public static class ShouldExtensionMethods
         var expectedItems = expected.ToArray();
 
         var source = new List<T>(actualItems);
-        var noContain = new List<T>();
+        var missing = new List<T>();
         var comparer = new AssertComparer<T>();
 
         foreach (var item in expectedItems)
         {
             if (!source.Contains(item, comparer))
             {
-                noContain.Add(item);
+                missing.Add(item);
             }
             else
             {
@@ -767,7 +767,7 @@ public static class ShouldExtensionMethods
             }
         }
 
-        if (noContain.Any() || source.Any())
+        if (missing.Any() || source.Any())
         {
             var message =
                 $"""
@@ -775,14 +775,22 @@ public static class ShouldExtensionMethods
                  entire list: {actualItems.EachToUsefulString()}
                  """;
 
-            if (noContain.Any())
+            if (missing.Any())
             {
-                message += $"{Environment.NewLine}does not contain: " + noContain.EachToUsefulString();
+                message +=
+                    $"""
+
+                     does not contain: {missing.EachToUsefulString()}
+                     """;
             }
 
             if (source.Any())
             {
-                message += $"{Environment.NewLine}does contain but shouldn't: " + source.EachToUsefulString();
+                message +=
+                    $"""
+
+                     does contain but shouldn't: {source.EachToUsefulString()}
+                     """;
             }
 
             throw new ShouldException(message);

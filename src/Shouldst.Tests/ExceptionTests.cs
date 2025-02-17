@@ -3,13 +3,13 @@
 public class ExceptionTests
 {
     [Test]
-    public void AssertExceptionContainsMessageWithMatchingSucceeds()
+    public void ShouldContainExceptionMessageWithMatchingSucceeds()
     {
         new Exception("error message").ShouldContainErrorMessage(" message");
     }
 
     [Test]
-    public void AssertExceptionContainsMessageWithMissingThrows()
+    public void ShouldContainExceptionMessageWithMissingThrows()
     {
         Assert.Throws<ShouldException>(() => new Exception("error message").ShouldContainErrorMessage("missing"));
     }

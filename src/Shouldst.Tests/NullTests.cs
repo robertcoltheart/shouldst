@@ -3,7 +3,7 @@
 public class NullTests
 {
     [Test]
-    public void AssertNullWithNullSucceeds()
+    public void ShouldBeNullWithNullSucceeds()
     {
         var value = default(object);
 
@@ -11,7 +11,7 @@ public class NullTests
     }
 
     [Test]
-    public void AssertNullWithNotNullThrows()
+    public void ShouldBeNullWithNotNullThrows()
     {
         var value = new object();
 
@@ -19,7 +19,7 @@ public class NullTests
     }
 
     [Test]
-    public void AssertNotNullWithNullThrows()
+    public void ShouldNotBeNullWithNullThrows()
     {
         var value = default(object);
 
@@ -27,7 +27,7 @@ public class NullTests
     }
 
     [Test]
-    public void AssertNotNullWithNotNullSucceeds()
+    public void ShouldNotBeNullWithNotNullSucceeds()
     {
         var value = new object();
 
