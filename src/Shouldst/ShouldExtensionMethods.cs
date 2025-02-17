@@ -670,7 +670,7 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldBeEqualIgnoringCase(this string? actual, string expected)
+    public static void ShouldEqualIgnoringCase(this string? actual, string expected)
     {
         if (expected == null)
         {
