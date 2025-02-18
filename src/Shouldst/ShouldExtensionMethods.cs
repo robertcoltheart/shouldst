@@ -797,14 +797,6 @@ public static class ShouldExtensionMethods
         }
     }
 
-    public static void ShouldBeThrownBy(this Type exceptionType, Action action)
-    {
-        var exception = CatchException(action);
-
-        ShouldNotBeNull(exception);
-        ShouldBeAssignableTo(exception, exceptionType);
-    }
-
     public static void ShouldThrow<T>(this Action action)
         where T : Exception
     {
